@@ -15,6 +15,7 @@ class EmailTemplate extends XSLTPage
 
     public $datasources = array();
     public $layouts = array();
+    public $_param = array();
 
     protected $_parsedProperties = array();
     protected $_frontendPage;
@@ -23,7 +24,7 @@ class EmailTemplate extends XSLTPage
     {
         parent::__construct();
         //needed for debug devkit.
-        $this->addParams(array(
+        $this->_param = array(
             'today' => DateTimeObj::get('Y-m-d'),
             'current-time' => DateTimeObj::get('H:i'),
             'this-year' => DateTimeObj::get('Y'),
@@ -33,14 +34,14 @@ class EmailTemplate extends XSLTPage
             'website-name' => Symphony::Configuration()->get('sitename', 'general'),
             'root' => URL,
             'workspace' => URL . '/workspace'
-        ));
+        );
     }
 
     public function addParams($params = array())
     {
         if (!is_array($params)) return false;
 
-        return ($this->setRuntimeParam(array_merge($this->_param, $params)));
+        return ($this->_param = array_merge($this->_param, $params));
     }
 
     public function getAbout()
@@ -65,8 +66,7 @@ class EmailTemplate extends XSLTPage
         $this->_frontendPage->_param = $this->_param;
 
         $xml = new XMLElement('data');
-        $xml->setIncludeHeader(true);
-        $this->_frontendPage->processDatasources(implode(', ',$this->datasources), $xml);
+        $this->_frontendPage->processDatasources(implode(', ',$this->datasources), $xml, $this->_param);
         $env = $this->_frontendPage->Env();
         foreach ((array) $env['pool'] as $name => $val) {
             $tmp[$name] = implode(', ', (array) $val);

@@ -61,7 +61,7 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
         $fields = $_POST['fields'];
 
         if (isset($_POST['action']['delete'])) {
-            if (EmailTemplateManager::delete($this->_context[1])) {
+            if (EmailTemplateManager::delete($this->_context['id'])) {
                 redirect(SYMPHONY_URL . '/extension/email_template_manager/templates/');
             } else {
                 $this->pageAlert(
@@ -74,7 +74,7 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
         } else {
 
             // Config editing
-            if (empty($this->_context[2]) || ($this->_context[2] === 'saved')) {
+            if (empty($this->_context['flag']) || ($this->_context['flag'] === 'saved')) {
 
                 if (!$this->_validateConfig($fields)) {
                     $this->_XML->appendChild($this->_validateConfig($fields, true, true));
@@ -94,7 +94,7 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
                     $fields['layouts'] = array('plain' => 'template.plain.xsl');
                 }
 
-                if (EmailTemplateManager::editConfig($this->_context[1], $fields)) {
+                if (EmailTemplateManager::editConfig($this->_context['id'], $fields)) {
                     redirect(SYMPHONY_URL . '/extension/email_template_manager/templates/edit/' . EmailTemplateManager::getHandleFromName($fields['name']) . '/saved/');
                 } else {
                     $this->pageAlert(
@@ -148,10 +148,9 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
     public function __viewEdit($new = false)
     {
         $this->setPageType('form');
-        $this->setTitle(sprintf(__('Symphony - Email Templates - %s', array(), false), ucfirst($this->_context[1])));
+        $this->setTitle(sprintf(__('Symphony - Email Templates - %s', array(), false), ucfirst($this->_context['id'])));
 
-        if ((isset($this->_context[2]) && $this->_context[2] === 'saved')
-            || (isset($this->_context[3]) && $this->_context[3] === 'saved')) {
+        if (isset($this->_context['flag']) && $this->_context['flag'] === 'saved') {
             $this->pageAlert(
                 __(
                     __('Template updated at %1$s.'),
@@ -184,9 +183,9 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
         );
 
         // Edit config
-        if (empty($this->_context[2]) || ($this->_context[2] === 'saved')) {
+        if (empty($this->_context['flag']) || ($this->_context['flag'] === 'saved')) {
             $templates = new XMLElement('templates');
-            $template = EmailTemplateManager::load($this->_context[1]);
+            $template = EmailTemplateManager::load($this->_context['id']);
             if ($template) {
                 $properties = $template->getProperties();
                 $title = $template->about['name'];
@@ -200,8 +199,8 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
                 $properties = $template->getProperties();
                 foreach ($properties['layouts'] as $layout => $file) {
                     $buttons[] = Widget::Anchor(
-                        __('Preview %s layout', array($layout)), SYMPHONY_URL . '/extension/email_template_manager/templates/preview/' . $template->getHandle() . '/' . $layout . '/',
-                        __('Preview %s layout', array($layout)), 'button', null, array('target' => '_blank')
+                        Widget::SVGIcon('view') . '<span><span>' . __('Preview %s layout', array($layout)) . '</span></span>', SYMPHONY_URL . '/extension/email_template_manager/templates/preview/' . $template->getHandle() . '/' . $layout . '/',
+                        Widget::SVGIcon('view') . '<span><span>' . __('Preview %s layout', array($layout)) . '</span></span>', 'button', null, array('target' => '_blank')
                     );
                 }
             } elseif (!$new) {
@@ -233,7 +232,7 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
 
     public function __viewNew()
     {
-        $this->_context[1] = 'New';
+        $this->_context['id'] = 'New';
         $this->_useTemplate = 'viewEdit';
         $this->__viewEdit(true);
     }
@@ -241,9 +240,8 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
     public function __viewPreview()
     {
         $this->_useTemplate = false;
-        list(,$handle, $template) = $this->_context;
-        $templates = EmailTemplateManager::load($handle);
-        $output =  $templates->preview($template);
+        $templates = EmailTemplateManager::load($this->_context['id']);
+        $output =  $templates->preview($this->_context['flag']);
         if ($template === 'plain' && !isset($_REQUEST['debug']) && !isset($_REQUEST['profile'])) {
             header('Content-Type:text/plain; charset=utf-8');
         }
@@ -261,8 +259,8 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
 
     public function action()
     {
-        if (isset($this->_context[2]) && $this->_context[2] === 'saved') {
-            $this->_context[2] = null;
+        if (isset($this->_context['flag']) && $this->_context['flag'] === 'saved') {
+            $this->_context['flag'] = null;
         }
         $fields = new XMLElement('fields');
         General::array_to_xml($fields, (array) $_POST['fields']);
