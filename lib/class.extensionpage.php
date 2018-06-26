@@ -14,11 +14,28 @@ class ExtensionPage extends AdministrationPage
         parent::__construct($params);
     }
 
+    public function parseRolesContext(){
+        $base_url = SYMPHONY_URL . '/extension/email_template_manager/templates/';
+        $current_url = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $params = explode('/', substr(str_replace($base_url, '', $current_url), 0, -1));
+
+        return array('action' => $params[0], 'id' => $params[1], 'flag' => $params[2]);
+    }
+
+    public function build(array $context = array()) {
+        parent::build($context = $this->parseRolesContext());
+    }
+
     public function __switchboard($type = 'view')
     {
         $this->_type = $type;
-        if (!isset($this->_context[0]) || trim($this->_context[0]) === '') $this->_function = 'index';
-        else $this->_function = $this->_context[0];
+
+        if (!isset($this->_context['action']) || trim($this->_context['action']) === '') {
+            $this->_function = 'index';
+        } else {
+            $this->_function = $this->_context['action'];
+        }
+
         parent::__switchboard($type);
     }
 
@@ -57,15 +74,24 @@ class ExtensionPage extends AdministrationPage
                     'upload-limit' => min($upload_size_php, $upload_size_sym),
                     'symphony-version' => Symphony::Configuration()->get('version', 'symphony'),
                 );
-                $html = $this->_XSLTProc->process($this->_XML->generate(), file_get_contents($template), $params);
+
+                $this->_XSLTProc->setRuntimeParam($params);
+                $html = $this->_XSLTProc->process($this->_XML->generate(), file_get_contents($template));
+
                 if ($this->_XSLTProc->isErrors()) {
                     $errstr = null;
 
                     while (list($key, $val) = $this->_XSLTProc->getError()) {
-                        $errstr .= 'Line: ' . $val['line'] . ' - ' . $val['message'] . self::CRLF;
+                        $errstr .= 'Line: ' . $val['line'] . ' - ' . $val['message'] . PHP_EOL;
                     }
 
-                    throw new SymphonyErrorPage(trim($errstr), null, 'xslt-error', array('proc' => clone $this->_XSLTProc));
+                    Frontend::instance()->throwCustomError(
+                        trim($errstr),
+                        __('XSLT Processing Error'),
+                        Page::HTTP_STATUS_ERROR,
+                        'xslt',
+                        array('proc' => clone $this->_XSLTProc)
+                    );
                 }
             } else {
                 Administration::instance()->errorPageNotFound();
@@ -74,7 +100,7 @@ class ExtensionPage extends AdministrationPage
             $this->Contents->setValue($html);
         }
 
-        return parent::generate();
+        return parent::generate($page = null);
     }
 
     protected function _getTemplate($type, $context)

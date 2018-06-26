@@ -204,7 +204,7 @@ class EmailTemplate extends XSLTPage
         }
     }
 
-    public function generate()
+    public function generate($page = null)
     {
         /**
          * Immediately before generating the output. Provided with the template object, XML and XSLT
@@ -229,7 +229,7 @@ class EmailTemplate extends XSLTPage
             )
         );
 
-        $output = parent::generate();
+        $output = parent::generate($page = null);
 
         /**
          * Immediately after generating the output. Provided with string containing the output

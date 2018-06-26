@@ -126,8 +126,12 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
         $this->setTitle(__('Symphony - Email Templates'));
 
         $this->appendSubheading(__('Email Templates'), Widget::Anchor(
-            __('Create New'), SYMPHONY_URL . '/extension/email_template_manager/templates/new/',
-            __('Create a new email template'), 'create button'
+            Widget::SVGIcon('add') . '<span><span>' . __('Create New') . '</span></span>',
+            SYMPHONY_URL . '/extension/email_template_manager/templates/new/',
+            __('Create a new email template'),
+            'create button',
+            null,
+            array('accesskey' => 'c')
         ));
 
         $templates = new XMLElement('templates');

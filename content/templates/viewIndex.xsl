@@ -29,17 +29,17 @@
 				</xsl:if>
 			</tbody>
 		</table>
-	    <div class="actions">
-	        <fieldset class="apply">
-	            <div>
-	                <select name="with-selected">
-	                    <option value="">With Selected...</option>
-	                    <option class="confirm" value="delete">Delete</option>
-	                </select>
-	            </div>
-	            <button type="submit" name="action[apply]">Apply</button>
-	        </fieldset>
-	    </div>
+		<div class="actions">
+			<fieldset class="apply">
+				<div>
+					<select name="with-selected">
+						<option value="">With Selected...</option>
+						<option class="confirm" value="delete">Delete</option>
+					</select>
+				</div>
+				<button type="submit" name="action[apply]">Apply</button>
+			</fieldset>
+		</div>
 	</form>
 </xsl:template>
 
