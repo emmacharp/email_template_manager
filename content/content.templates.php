@@ -177,7 +177,10 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
         $title = __('New Template');
         $buttons = array();
         $breadcrumbs = array(
-            Widget::Anchor(__('Email Templates'), SYMPHONY_URL . '/extension/email_template_manager/templates/')
+            Widget::Anchor(
+                Widget::SVGIcon('arrow') . __('Email Templates'),
+                SYMPHONY_URL . '/extension/email_template_manager/templates/'
+            ),
         );
 
         // Edit config
@@ -222,6 +225,10 @@ class contentExtensionemail_template_managertemplates extends ExtensionPage
         // Add page context
         $this->appendSubheading($title, $buttons);
         $this->insertBreadcrumbs($breadcrumbs);
+
+        $this->Header->setAttribute('class', 'spaced-bottom');
+        $this->Context->setAttribute('class', 'spaced-right');
+        $this->Contents->setAttribute('class', 'centered-content');
     }
 
     public function __viewNew()

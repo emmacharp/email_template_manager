@@ -260,19 +260,39 @@
 			</div>
 		</fieldset>
 		<div class="actions">
+			<div class="svg-icon-container">
+				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="28.7px" height="19.3px" viewBox="0 0 28.7 19.3">
+					<path fill="currentColor" d="M21.2,19.3H6.4C2.8,19.3,0,16.5,0,13c0-2.9,2-5.4,4.7-6.1C5.5,2.9,9,0,13.2,0c2.3,0,4.4,0.9,6.1,2.5c0.4,0.4,0.4,1,0,1.4c-0.4,0.4-1,0.4-1.4,0C16.6,2.7,15,2,13.2,2C9.8,2,7,4.5,6.6,7.9c0,0.5-0.4,0.8-0.9,0.9C3.6,9.1,2,10.9,2,13c0,2.4,1.9,4.3,4.4,4.3h14.8c3.1,0,5.5-2.4,5.5-5.4c0-1.9-1.1-3.7-2.8-4.7c-0.5-0.3-0.6-0.9-0.4-1.4c0.3-0.5,0.9-0.6,1.4-0.4c2.3,1.3,3.8,3.8,3.8,6.4C28.7,16,25.4,19.3,21.2,19.3z"></path>
+					<path fill="currentColor" d="M13.9,13.2L13.9,13.2c-0.3,0-0.5-0.1-0.7-0.3L9.5,9.3c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l2.9,2.9l9.3-9.3c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-10,10C14.4,13.1,14.1,13.2,13.9,13.2z"></path>
+				</svg>
+				<input type="submit" accesskey="s" name="action[save]">
+					<xsl:attribute name="value">
+						<xsl:choose>
+							<xsl:when test="/data/templates/entry/name">Save Changes</xsl:when>
+							<xsl:otherwise>Create Template</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+				</input>
+			</div>
+			<xsl:if test="not(/data/context/item[@index=1] = 'new')" >
+				<div class="svg-icon-container">
+					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="26.2px" height="26px" viewBox="0 0 26.2 26">
+						<path fill="currentColor" d="M25.2,24c-0.6,0-1-0.4-1-1V11.5L21.8,11c0,0,0,0,0,0c-3.7,0-6.6-2.5-6.6-6.1V1c0-0.6,0.4-1,1-1s1,0.4,1,1v3.9c0,2.5,2,4.5,4.6,4.5l3.4,0.1c0.5,0,1,0.5,1,1V23C26.2,23.6,25.8,24,25.2,24z"></path>
+						<path fill="currentColor" d="M23.2,26h-16c-1.7,0-3-1.3-3-3c0-0.6,0.4-1,1-1s1,0.4,1,1c0,0.6,0.4,1,1,1h16c0.6,0,1-0.4,1-1V10.1c-0.6-1.3-6.8-7.5-8.1-8.1H7.2c-0.6,0-1,0.4-1,1c0,0.6-0.4,1-1,1s-1-0.4-1-1c0-1.7,1.3-3,3-3h9c1.7,0,10,8.3,10,10v13C26.2,24.7,24.9,26,23.2,26z M24.3,10.2L24.3,10.2L24.3,10.2z M16.1,2L16.1,2L16.1,2z"></path>
+						<path fill="currentColor" d="M1,18.2c-0.3,0-0.5-0.1-0.7-0.3c-0.4-0.4-0.4-1,0-1.4l8.5-8.5c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-8.5,8.5C1.5,18.1,1.3,18.2,1,18.2z"></path>
+						<path fill="currentColor" d="M9.5,18.2c-0.3,0-0.5-0.1-0.7-0.3L0.3,9.5c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l8.5,8.5c0.4,0.4,0.4,1,0,1.4C10,18.1,9.7,18.2,9.5,18.2z"></path>
+					</svg>
+
+					<button accesskey="d" title="Delete this page" class="button confirm delete" name="action[delete]">Delete</button>
+				</div>
+			</xsl:if>
+
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="9.2px" height="5.6px" viewBox="0 0 9.2 5.6">
+				<path fill="currentColor" d="M4.6,5.6c-0.3,0-0.5-0.1-0.7-0.3L0.3,1.7c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l2.9,2.9l2.8-2.8c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4L5.3,5.3C5.2,5.5,4.9,5.6,4.6,5.6z"></path>
+			</svg>
+
 			<xsl:if test="/data/xsrf_input">
 				<xsl:copy-of select="/data/xsrf_input/*"/>
-			</xsl:if>
-			<input type="submit" accesskey="s" name="action[save]">
-				<xsl:attribute name="value">
-					<xsl:choose>
-						<xsl:when test="/data/templates/entry/name">Save Changes</xsl:when>
-						<xsl:otherwise>Create Template</xsl:otherwise>
-					</xsl:choose>
-				</xsl:attribute>
-			</input>
-			<xsl:if test="not(/data/context/item[@index=1] = 'new')" >
-				<button accesskey="d" title="Delete this page" class="button confirm delete" name="action[delete]">Delete</button>
 			</xsl:if>
 		</div>
 		</form>
