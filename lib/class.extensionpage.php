@@ -10,6 +10,7 @@ class ExtensionPage extends AdministrationPage
 
     public function __construct($params)
     {
+        require_once(TOOLKIT . '/class.xsltprocess.php');
         $this->_XSLTProc = new XsltProcess();
         parent::__construct($params);
     }
@@ -41,7 +42,7 @@ class ExtensionPage extends AdministrationPage
 
     public function view()
     {
-        $this->Contents = new XMLElement('div', null, array('id' => 'contents'));
+        $this->Contents = new XMLElement('main', null, array('id' => 'contents', 'role' => 'main'));
         $this->Form->setAttribute('style','display:none;');
 
         return parent::view();
@@ -97,7 +98,8 @@ class ExtensionPage extends AdministrationPage
                 Administration::instance()->errorPageNotFound();
             }
             $this->Form = null;
-            $this->Contents->setValue($html);
+            $primary = new XMLElement('section', $html, array('id' => 'primary'));
+            $this->Contents->appendChild($primary);
         }
 
         return parent::generate($page = null);
